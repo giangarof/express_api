@@ -5,13 +5,13 @@ TO DO
     admin                                   done.
     protect                                 done.
 
-models
+## models
     follow
     unfollow
 
 
                         add the admin middleware
-controllers
+## controllers
     retrieve all users  /protect /admin             admin panel
     delete users        /protect /admin             admin panel
     update users        /protect /admin             users and admin can 
