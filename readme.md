@@ -1,6 +1,6 @@
 TO DO
 
-auth middleware
+## auth middleware
     if a page doesnt exist, show error      done.
     admin                                   done.
     protect                                 done.
