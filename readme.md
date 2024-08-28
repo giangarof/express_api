@@ -10,16 +10,17 @@ TO DO
     unfollow
 
 
-                        add the admin middleware
+                
 ## controllers
     retrieve all users  /protect /admin             admin panel
     delete users        /protect /admin             admin panel
     update users        /protect /admin             users and admin can 
     profile user        /protect /protect           only if you are logged in
+    add the admin middleware
 
 
 
-posts
-    models
-    controllers
-    routes
+## posts
+    models,
+    controllers,
+    routes,
