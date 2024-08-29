@@ -1,17 +1,17 @@
 TO DO
 
-## auth middleware
+auth middleware
     if a page doesnt exist, show error      done.
     admin                                   done.
     protect                                 done.
 
-## models
+models
     follow
     unfollow
 
 
-                
-## controllers
+                        add the admin middleware
+controllers
     retrieve all users  /protect /admin             admin panel
     delete users        /protect /admin             admin panel
     update users        /protect /admin             users and admin can 

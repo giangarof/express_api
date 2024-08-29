@@ -1,5 +1,6 @@
 import bcryptjs from 'bcryptjs';
-import mongoose from 'mongoose';
+import {Schema, mongoose} from 'mongoose';
+
 
 const userSchema = new mongoose.Schema({
     isAdmin:{
@@ -25,7 +26,15 @@ const userSchema = new mongoose.Schema({
     },
     profileImage:[
         {url:String,filename:String,originalname:String}
-    ]
+    ],
+    followers:[{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    following:[{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 })
 
 userSchema.methods.matchPassword = async function(enteredPassword){

@@ -114,6 +114,37 @@ const deleteUser = async(req,res) => {
     }
 }
 
+const follow = async(req,res) => {
+    // ID of the user you want to follow
+    const {id} = req.params;
+
+    // find the ID of the user you want to follow
+    const user = await User.findById(id)
+
+    // your ID
+    const you = await User.findById(req.user._id)
+
+    // Check if you are a follower
+    const follower = user.followers.some((x) => {return x.equals(you._id) })
+    
+    // If you are a follower
+    if(follower){
+        // pull your id from the followers array of the user
+        user.followers.pull(req.user._id)
+        // pull your id from your following array
+        you.following.pull(user._id)
+    } else {
+        // push your id to the followers array of the user
+        user.followers.push(req.user._id)
+        // push your id to your following array
+        you.following.push(user._id)
+    }
+    // Save changes
+    await user.save()
+    await you.save()
+    res.status(200).json({message: follower ? 'Not a follower' : 'Following', user})
+}
+
 
 export {
     login, 
@@ -122,4 +153,5 @@ export {
     update,
     getAll,
     deleteUser,
+    follow
 }
