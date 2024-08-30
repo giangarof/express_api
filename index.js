@@ -21,7 +21,6 @@ import sessionConfig from "./config/session.js"
 app.use('/api/user/', user)
 
 
-
 // Error handling
 
 // Using the custom Error handler for all the possible routes 
@@ -35,8 +34,6 @@ app.use((err, req,res, next) => {
     res.status(status).send(msg)
     next()
 })
-
-
 
 // Running the app
 const port = 8000;
