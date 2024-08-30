@@ -22,13 +22,13 @@ const signup = async (req,res) => {
         if(verifyIfEmailExits){
             res.status(400)
             throw new Error('Email already in use. Please, use another email.')
-        } else {
+        } 
             const newUser = await User.create({
                 name, username, email, password
             })
-            res.status(201).json(newUser)
+            res.status(201).json({created: newUser ? newUser : "Something went wrong, Try again."})
 
-        }
+        
     } catch (error) {
         throw new Error(error)
     }
@@ -40,7 +40,7 @@ const logout = async (req,res) => {
         httpOnly:true,
         expires: new Date(0)
     })
-    res.status(200).send('log out')
+    res.status(200).json({message: "Logged out."})
 }
 
 const update = async (req, res) => {
@@ -103,6 +103,14 @@ const getAll = async(req,res) => {
     res.status(200).json(users)
 }
 
+const getUser = async(req,res) => {
+    const lookingFor = req.params.id;
+    const user = await User.findById(lookingFor);
+    res.status(200).json({
+        message : user ? "User found" : "user could not be found", 
+        user: user ? user : "No details"})
+}
+
 const deleteUser = async(req,res) => {
     const {id} = req.params;
     const user = await User.findByIdAndDelete(id);
@@ -145,13 +153,13 @@ const follow = async(req,res) => {
     res.status(200).json({message: follower ? 'Not a follower' : 'Following', user})
 }
 
-
 export {
     login, 
     signup,
     logout,
     update,
     getAll,
+    getUser,
     deleteUser,
     follow
 }

@@ -24,7 +24,7 @@ app.use('/api/user/', user)
 
 // Error handling
 
-// Using the custom Error handler for all the posible routes 
+// Using the custom Error handler for all the possible routes 
 app.all('*', (req,res,next) => {
     next(new ExpressError('Page Not Found, try again.', 404))
 });
