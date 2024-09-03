@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { multerPost } from '../../config/multer.js';
+import { multerFields } from '../../config/multer.js';
 
 import { administrator, protect } from '../../middleware/admin.js';
 
@@ -27,7 +27,7 @@ router.post('/logout', logout)
 router.post('/follow/:id', protect, follow)
 
 
-router.put('/update/:id', protect, multerPost, asyncHandler(update))
+router.put('/update/:id', multerFields, update)
 router.delete('/delete/:id', protect, administrator, deleteUser)
 
 export default router;

@@ -7,7 +7,7 @@ const login = async (req,res) => {
     // console.log(user)
     if(user && (await user.matchPassword(password))){
         generateToken(res, user._id)
-        res.status(200).send({profile: user})
+        res.status(200).send({message:'sign in', profile: user})
     } else{
         res.status(404).send(`User not found.`)
     }
@@ -26,7 +26,7 @@ const signup = async (req,res) => {
             const newUser = await User.create({
                 name, username, email, password
             })
-            res.status(201).json({created: newUser ? newUser : "Something went wrong, Try again."})
+            res.status(201).json({message: "User created successfully", created: newUser ? newUser : "Something went wrong, Try again."})
 
         
     } catch (error) {
@@ -51,12 +51,29 @@ const update = async (req, res) => {
     const user = await User.findById(id)
     const verifyIfEmailExits = await User.findOne({email})
    
-    // Image Update
-    const imgs = req.files.map(f => ({
-        url: f.path, 
-        filename: f.filename, 
-        originalname: f.originalname
-    }));
+   // Handle profile image updates
+   if (req.files.profileImage) {
+        const imgs = req.files.profileImage.map(f => ({
+            url: f.path,
+            filename: f.filename,
+            originalname: f.originalname
+        }));
+        if (imgs.length > 0) {
+            user.profileImage = imgs;
+        }
+    }
+
+    // Handle header image updates
+    if (req.files.headerImage) {
+        const imgsHeader = req.files.headerImage.map(f => ({
+            url: f.path,
+            filename: f.filename,
+            originalname: f.originalname
+        }));
+        if (imgsHeader.length > 0) {
+            user.headerImage = imgsHeader;
+        }
+    }
 
     // If user doesnt exist
     if(!user){
@@ -68,10 +85,7 @@ const update = async (req, res) => {
             await cloudinary.uploader.destroy(filename)
         }
         await user.updateOne({$pull: {profileImage: {filename: { $in: req.body.deleteImages}}}})
-    }
-    
-    if (imgs.length > 0) {
-        user.profileImage = imgs;
+        await user.updateOne({$pull: {headerImage: {filename: { $in: req.body.deleteImages}}}})
     }
 
     // check for password

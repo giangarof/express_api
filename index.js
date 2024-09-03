@@ -15,10 +15,12 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
 import user from "./MCR/routes/user.js"
+import post from "./MCR/routes/post.js"
 import sessionConfig from "./config/session.js"
 
 // Routes
-app.use('/api/user/', user)
+app.use('/api/user', user)
+app.use('/api/post', post)
 
 
 // Error handling

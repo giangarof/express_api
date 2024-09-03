@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
     profileImage:[
         {url:String,filename:String,originalname:String}
     ],
+    headerImage:[
+        {url:String,filename:String,originalname:String}
+    ],
     followers:[{
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -34,6 +37,10 @@ const userSchema = new mongoose.Schema({
     following:[{
         type: Schema.Types.ObjectId,
         ref: 'User'
+    }],
+    posts:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
     }]
 })
 
