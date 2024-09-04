@@ -1,7 +1,16 @@
 # To do
-    post 
+    update post         
+        admin and owner can perform action
+    reviews
+        delete
+        update
+        like
 
-# apps
+maybe done the backend?
+
+
+
+# apps to build with this api
     react + materialui
     react native
     vue

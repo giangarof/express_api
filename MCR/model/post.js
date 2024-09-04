@@ -1,4 +1,5 @@
 import {Schema, mongoose} from 'mongoose';
+import { type } from 'os';
 
 const postSchema = new mongoose.Schema({
     author:[{
@@ -26,6 +27,15 @@ const postSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
+    }],
+    reviews:[{
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Review"
+        },
+        name:{
+            type:String
+        }
     }]
 
 }, {timeStamp:true});
