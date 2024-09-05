@@ -40,8 +40,41 @@ const findPost = async (req,res) => {
 }
 
 // update post
-const update = (req, res) => {
-    console.log(`update`)
+const update = async (req, res) => {
+    const {id} = req.params;
+    const {title, imagePost, description} = req.body;
+    const post = await Post.findById(id)
+
+    if(!post){
+        res.status(404).json({message:`Post doesn't exist, or it was deleted.`})
+
+    }
+
+    // Handle post image updates
+    if (req.files.imagePost) {
+        const imgs = req.files.imagePost.map(f => ({
+            url: f.path,
+            filename: f.filename,
+            originalname: f.originalname
+        }));
+        if (imgs.length > 0) {
+            post.imagePost = imgs;
+        }
+    }
+    if(req.body.deleteImages){
+        for(let filename of req.body.deleteImages){
+            await cloudinary.uploader.destroy(filename)
+        }
+        await post.updateOne({$pull: {imagePost: {filename: { $in: req.body.deleteImages}}}})
+    }
+
+    if(post){
+        post.title = title;
+        post.description = description;
+        await post.save()
+        res.status(200).json({message:`Post Updated Successfully!`, post})
+    }
+    
 }
 
 
@@ -68,6 +101,7 @@ const deletePost = async (req,res) => {
         const user = await User.findById(post.author[0]._id)
         // find the post
         // const postToDelete = postId._id
+
         // the filter method create a new array with a specific value
         // here, i'm excluding the id
         user.posts =  user.posts.filter(i => i != id)

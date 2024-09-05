@@ -1,10 +1,9 @@
 # To do
-    update post         
-        admin and owner can perform action
+    improve error handling | middleware
     reviews
-        delete
-        update
-        like
+        delete      admin and review owner
+        update      admin and review owner
+        like        just the owner
 
 maybe done the backend?
 
