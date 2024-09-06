@@ -63,7 +63,20 @@ const deleteReview = async(req,res) => {
 }
 
 const like = async(req,res) => {
+    const {reviewId} = req.params;
+    const user = req.user._id
 
+    const review = await Review.findById(reviewId)
+
+    const like = review.likes.some((x) => {return x.equals(user._id) })
+    if(like){
+        review.likes.pull(user)
+    } else {
+        review.likes.push(user)
+    }
+    await review.save()
+    res.status(200).json({message: like ? 'Unlike' : 'liked', review})
+    console.log(review, user)
 }
 
 export {

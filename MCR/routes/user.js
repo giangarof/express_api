@@ -17,17 +17,17 @@ import {
 
 import asyncHandler from '../../middleware/asyncHandler.js';
 
-router.get('/getall', protect, administrator, getAll)
-router.get('/:id', protect, getUser)
+router.get('/getall', protect, administrator, asyncHandler(getAll))
+router.get('/:id', protect, asyncHandler(getUser))
 
-router.post('/login', login)
+router.post('/login', asyncHandler(login))
 router.post('/signup', asyncHandler(signup))
 router.post('/logout', logout)
 
-router.post('/follow/:id', protect, follow)
+router.post('/follow/:id', protect, asyncHandler(follow))
 
 
-router.put('/update/:id', protect, Admin_Or_Owner_User, multerFields, update)
-router.delete('/delete/:id', protect, Admin_Or_Owner_User, deleteUser)
+router.put('/update/:id', protect, Admin_Or_Owner_User, multerFields, asyncHandler(update))
+router.delete('/delete/:id', protect, Admin_Or_Owner_User, asyncHandler(deleteUser))
 
 export default router;
