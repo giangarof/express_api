@@ -31,26 +31,35 @@ const create = async(req,res) => {
 
     // console.log(review)
 
-    res.status(200).send({message:'Review created', post})
+    res.status(200).send({message:'Review created', review})
     
 }
 
 const update = async(req,res) => {
-    const {id} = req.params
-    const review = await Review.findById(id)
+    const {id, reviewId} = req.params
+    const {content} = req.body
+    const review = await Review.findById(reviewId)
+    
+    if(!review){
+        res.status(404).json({message:`Review doesnt exist.`})
+    } else {
+        review.content = content
+        await review.save()
+        res.status(404).json({message:`Review updated successfully!`})
+    }
     console.log(review)
 }
 
 const deleteReview = async(req,res) => {
-    const {id} = req.params;
-    const review = await Review.findById(id)
-    if(!review){
-        res.status(404).json({message: `Review doesn't exist`})
-        
-    } else{
-        res.status(20).json({review})
-    }
+    const {reviewId} = req.params;
+    const review = await Review.findById(reviewId)
 
+    if(!review){
+        res.status(404).json({message:`Review doesnt exist.`})
+    } else {
+        await Review.findByIdAndDelete(reviewId)
+        res.status(404).json({message:`Review deleted successfully!`})
+    }
 }
 
 const like = async(req,res) => {

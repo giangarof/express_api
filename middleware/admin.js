@@ -3,6 +3,7 @@ import ExpressError from "./ExpressError.js"
 import jwt from 'jsonwebtoken'
 import User from "../MCR/model/user.js"
 import Post from "../MCR/model/post.js"
+import Review from "../MCR/model/review.js"
 
 export const administrator = (req,res,next) => {
     if(req.user && req.user.isAdmin){
@@ -83,7 +84,22 @@ export const Admin_Or_Owner_User = asyncHandler(async(req,res,next) => {
 })
 
 export const Admin_Or_Owner_Review = asyncHandler(async(req,res,next) => {
-    
+    // get the review id
+    const {reviewId} = req.params;
+    const review = await Review.findById(reviewId)
+
+    const reviewOwner = review.author[0]._id
+    // get the info of the logged user. ID and isAdmin
+    const userId = req.user._id
+    const isAdmin = req.user.isAdmin
+
+    // console.log(review, userId, isAdmin, reviewOwner)
+
+    if(reviewOwner.equals(userId) || isAdmin){
+        next()
+    } else{
+        throw new ExpressError(`You're not the owner of the post, nor Admin`, 401)
+    }
 })
 
 
