@@ -29,13 +29,13 @@ const postSchema = new mongoose.Schema({
         },
     }],
     reviews:[{
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Review"
-        },
-        name:{
-            type:String
-        }
+        
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review"
+        
+        // name:{
+        //     type:String
+        // }
     }]
 
 }, {timeStamp:true});

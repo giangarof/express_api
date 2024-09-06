@@ -35,9 +35,10 @@ const findAll = async(req,res) => {
 // get one post
 const findPost = async (req,res) => {
     const {id} = req.params;
-    const post = await Post.findById(id)
+    const post = await Post.findById(id).populate('reviews')
     res.status(200).json({message:'Found', post})
-}
+    // console.log(post)
+}   
 
 // update post
 const update = async (req, res) => {
@@ -76,8 +77,6 @@ const update = async (req, res) => {
     }
     
 }
-
-
 
 // delete post
 const deletePost = async (req,res) => {
@@ -126,7 +125,6 @@ const deletePost = async (req,res) => {
 
 }
 
-
 // like post
 const like = async(req,res) => {
     // userId
@@ -146,7 +144,6 @@ const like = async(req,res) => {
     res.status(200).json({message: like ? 'Unlike' : 'liked', post})
     
 }
-
 
 export {
     findAll,

@@ -46,7 +46,7 @@ export const protect = asyncHandler(async(req,res,next) => {
 //     console.log(req.user_id, post.author)
 // }
 
-export const Admin_Or_Owner = async (req,res,next) => {
+export const Admin_Or_Owner_Post = asyncHandler(async(req,res,next) => {
     const {id} = req.params;
     const post = await Post.findById(id)
     const postOwner = post.author[0]._id
@@ -60,26 +60,31 @@ export const Admin_Or_Owner = async (req,res,next) => {
         throw new ExpressError(`You're not the owner of the post, nor Admin`, 401)
     }
     
-}
+})
 
-export const Admin_Or_Owner_User = async (req,res,next) => {
+export const Admin_Or_Owner_User = asyncHandler(async(req,res,next) => {
     const {id} = req.params;
-    // The user you're looking for
-    const user = await User.findById(id)
-    const userOwnerId = user._id
-
-    // the logged user
-    const loggedUser_id = req.user._id;
-
-    // If the logged user is admin
-    const isAdmin = req.user.isAdmin
-    console.log(userOwnerId, loggedUser_id, isAdmin)
-    if(userOwnerId.equals(loggedUser_id) || isAdmin){
-        next()
-    } else{
-        res.status(401)
-        throw new Error(`You're not the owner account, nor Admin`)
-    }
-
+        // The user you're looking for
+        const user = await User.findById(id)
+        const userOwnerId = user._id
     
-}
+        // the logged user
+        const loggedUser_id = req.user._id;
+    
+        // If the logged user is admin
+        const isAdmin = req.user.isAdmin
+        // console.log(userOwnerId, loggedUser_id, isAdmin)
+        if(userOwnerId.equals(loggedUser_id) || isAdmin){
+            next()
+        } else{
+            // res.status(401).json({message:'error'})
+            throw new ExpressError(`You're not the owner account, nor Admin`, 401)
+        }
+})
+
+export const Admin_Or_Owner_Review = asyncHandler(async(req,res,next) => {
+    
+})
+
+
+

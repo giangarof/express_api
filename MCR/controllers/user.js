@@ -104,22 +104,22 @@ const update = async (req, res) => {
         user.password = password;
         user.email = email;
         await user.save()
-        res.status(200).json({user})
+        res.status(200).json({message:`User updated successfully!`, user})
     } else{
         res.status(404).send(`something went wrong, try again later.`)
     }
-    
 }
 
 const getAll = async(req,res) => {
-    const users = await User.find({})
+    const users = await User.find({}).populate('posts')
     // console.log(users)
     res.status(200).json(users)
 }
 
+// Get user by ID
 const getUser = async(req,res) => {
     const lookingFor = req.params.id;
-    const user = await User.findById(lookingFor);
+    const user = await User.findById(lookingFor).populate('posts');
     res.status(200).json({
         message : user ? "User found" : "user could not be found", 
         user: user ? user : "No details"})
@@ -132,7 +132,7 @@ const deleteUser = async(req,res) => {
         res.status(400).json({message:'user already deleted, or user doesnt exist.'})
     } else {
         res.status(200).json({message:'User deleted successfully'});
-        console.log(user)
+        // console.log(user)
     }
 }
 

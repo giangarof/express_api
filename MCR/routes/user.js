@@ -21,7 +21,7 @@ router.get('/getall', protect, administrator, getAll)
 router.get('/:id', protect, getUser)
 
 router.post('/login', login)
-router.post('/signup', signup)
+router.post('/signup', asyncHandler(signup))
 router.post('/logout', logout)
 
 router.post('/follow/:id', protect, follow)

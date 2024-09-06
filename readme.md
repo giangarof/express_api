@@ -1,9 +1,8 @@
 # To do
-    improve error handling | middleware
     reviews
         delete      admin and review owner
         update      admin and review owner
-        like        just the owner
+        like        just the owner 
 
 maybe done the backend?
 

@@ -16,7 +16,7 @@ import {
 
 router.post('/create/:id', protect, create)
 router.post('/like/:id', protect, like)
-router.post('/update/:id', protect, update)
-router.delete('/delete/:id', protect, deleteReview)
+router.put('/update/:id', protect, update)
+router.get('/delete/:id', protect, deleteReview)
 
 export default router;
