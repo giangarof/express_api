@@ -1,3 +1,9 @@
+# To run 
+    clone it
+    npm install
+    npm run dev
+    
+
 # About the project
     This is a express api built with node.js. 
     Used MongoDB to store the data.
