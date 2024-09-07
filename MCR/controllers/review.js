@@ -40,25 +40,34 @@ const update = async(req,res) => {
     const {content} = req.body
     const review = await Review.findById(reviewId)
     
-    if(!review){
-        res.status(404).json({message:`Review doesnt exist.`})
-    } else {
-        review.content = content
-        await review.save()
-        res.status(404).json({message:`Review updated successfully!`})
+    try {
+        if(!review){
+            res.status(404).json({message:`Review doesnt exist.`})
+        } else {
+            review.content = content
+            await review.save()
+            res.status(404).json({message:`Review updated successfully!`})
+        }
+        
+    } catch (error) {
+        throw new Error(error)
     }
-    console.log(review)
 }
 
 const deleteReview = async(req,res) => {
     const {reviewId} = req.params;
     const review = await Review.findById(reviewId)
 
-    if(!review){
-        res.status(404).json({message:`Review doesnt exist.`})
-    } else {
-        await Review.findByIdAndDelete(reviewId)
-        res.status(404).json({message:`Review deleted successfully!`})
+    try {
+        if(!review){
+            res.status(404).json({message:`Review doesnt exist.`})
+        } else {
+            await Review.findByIdAndDelete(reviewId)
+            res.status(404).json({message:`Review deleted successfully!`})
+        }
+        
+    } catch (error) {
+        throw new Error(error)
     }
 }
 
@@ -69,14 +78,20 @@ const like = async(req,res) => {
     const review = await Review.findById(reviewId)
 
     const like = review.likes.some((x) => {return x.equals(user._id) })
-    if(like){
-        review.likes.pull(user)
-    } else {
-        review.likes.push(user)
+
+    try {
+        if(like){
+            review.likes.pull(user)
+        } else {
+            review.likes.push(user)
+        }
+        await review.save()
+        res.status(200).json({message: like ? 'Unlike' : 'liked', review})
+        
+    } catch (error) {
+        throw new Error(error)
     }
-    await review.save()
-    res.status(200).json({message: like ? 'Unlike' : 'liked', review})
-    console.log(review, user)
+   
 }
 
 export {

@@ -9,20 +9,26 @@ const createPost = async (req,res) => {
     // find the user
     const user = await User.findById(req.user._id);
 
-    // image upload handler
-    post.imagePost = req.files.imagePost.map(f => ({
-        url: f.path, 
-        filename: f.filename, 
-        originalname:f.originalname
-    }));
-    // post.author object, attach id and the name
-    post.author = {_id: req.user._id, name: req.user.name}
-    // user.posts object, push the post
-    user.posts.push(post)
-    // save it
-    await post.save()
-    await user.save()
-    res.status(201).json({message:'Post created', post})
+    try {
+        // image upload handler
+        post.imagePost = req.files.imagePost.map(f => ({
+            url: f.path, 
+            filename: f.filename, 
+            originalname:f.originalname
+        }));
+        // post.author object, attach id and the name
+        post.author = {_id: req.user._id, name: req.user.name}
+        // user.posts object, push the post
+        user.posts.push(post)
+        // save it
+        await post.save()
+        await user.save()
+        res.status(201).json({message:'Post created', post})
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+
 
 }
 
@@ -46,36 +52,41 @@ const update = async (req, res) => {
     const {title, imagePost, description} = req.body;
     const post = await Post.findById(id)
 
-    if(!post){
-        res.status(404).json({message:`Post doesn't exist, or it was deleted.`})
-
-    }
-
-    // Handle post image updates
-    if (req.files.imagePost) {
-        const imgs = req.files.imagePost.map(f => ({
-            url: f.path,
-            filename: f.filename,
-            originalname: f.originalname
-        }));
-        if (imgs.length > 0) {
-            post.imagePost = imgs;
+    try {
+        if(!post){
+            res.status(404).json({message:`Post doesn't exist, or it was deleted.`})
         }
-    }
-    if(req.body.deleteImages){
-        for(let filename of req.body.deleteImages){
-            await cloudinary.uploader.destroy(filename)
-        }
-        await post.updateOne({$pull: {imagePost: {filename: { $in: req.body.deleteImages}}}})
-    }
-
-    if(post){
-        post.title = title;
-        post.description = description;
-        await post.save()
-        res.status(200).json({message:`Post Updated Successfully!`, post})
-    }
     
+        // Handle post image updates
+        if (req.files.imagePost) {
+            const imgs = req.files.imagePost.map(f => ({
+                url: f.path,
+                filename: f.filename,
+                originalname: f.originalname
+            }));
+            if (imgs.length > 0) {
+                post.imagePost = imgs;
+            }
+        }
+        if(req.body.deleteImages){
+            for(let filename of req.body.deleteImages){
+                await cloudinary.uploader.destroy(filename)
+            }
+            await post.updateOne({$pull: {imagePost: {filename: { $in: req.body.deleteImages}}}})
+        }
+    
+        if(post){
+            post.title = title;
+            post.description = description;
+            await post.save()
+            res.status(200).json({message:`Post Updated Successfully!`, post})
+        }
+        
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+
 }
 
 // delete post
@@ -135,13 +146,18 @@ const like = async(req,res) => {
 
     const like = post.likes.some((x) => {return x.equals(user._id) })
 
-    if(like){
-        post.likes.pull(user)
-    } else {
-        post.likes.push(user)
+    try {
+        if(like){
+            post.likes.pull(user)
+        } else {
+            post.likes.push(user)
+        }
+        await post.save()
+        res.status(200).json({message: like ? 'Unlike' : 'liked', post})
+        
+    } catch (error) {
+        throw new Error(error)
     }
-    await post.save()
-    res.status(200).json({message: like ? 'Unlike' : 'liked', post})
     
 }
 
