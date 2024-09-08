@@ -25,6 +25,7 @@
     It can be created, updated, liked/unliked, and deleted
 
 # apps to build with this api
+    My Ideas
     something with react + materialui
     something with react native
     something with vue
