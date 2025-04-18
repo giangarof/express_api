@@ -34,7 +34,8 @@ app.all('*', (req,res,next) => {
 
 // Here I'm using app.use() to destructure the -err- parameter
 app.use((err, req,res, next) => {
-    const {status=500, msg = 'something went wrong'} = err;
+    console.log('error', err)
+    const {status=500, msg = err.message} = err;
     res.status(status).send(msg)
     next()
 })

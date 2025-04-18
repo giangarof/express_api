@@ -7,24 +7,18 @@ import {
     
  } from '../../middleware/admin.js';
 import { multerFields } from '../../config/multer.js';
-import { 
-    createPost, 
-    findAll,
-    findPost,
-    deletePost,
-    like,
-    update
-
-} from '../controllers/post.js';
 import asyncHandler from '../../middleware/asyncHandler.js';
 
-router.get('/', asyncHandler(findAll))
-router.get('/:id', asyncHandler(findPost))
+import { PostController } from '../controllers/post.js';
+const post = new PostController();
 
-router.post('/create', protect, multerFields, asyncHandler(createPost))
-router.post('/like/:id', protect, asyncHandler(like))
+router.get('/', asyncHandler(post.findAll))
+router.get('/:id', asyncHandler(post.findPost))
 
-router.put('/update/:id', protect, Admin_Or_Owner_Post, multerFields, asyncHandler(update))
-router.delete('/delete/:id', protect, Admin_Or_Owner_Post, asyncHandler(deletePost))
+router.post('/create', protect, multerFields, asyncHandler(post.createPost))
+router.post('/like/:id', protect, asyncHandler(post.like))
+
+router.put('/update/:id', protect, Admin_Or_Owner_Post, multerFields, asyncHandler(post.update))
+router.delete('/delete/:id', protect, Admin_Or_Owner_Post, asyncHandler(post.deletePost))
 
 export default router;

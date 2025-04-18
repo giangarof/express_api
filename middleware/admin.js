@@ -20,25 +20,20 @@ export const protect = asyncHandler(async(req,res,next) => {
     // Read the jwt from the cookie
     token = req.cookies.jwt;
     // console.log(token)
-    if(token){
         try {
-            const decoded = jwt.verify(token, process.env.SECRET)
-            req.user = await User.findById(decoded.userId).select('-password')
-            // req.user = decoded;
-            // console.log(decoded)
-            // console.log(req.user)
-            res.status(200)
-            next()
+            if(token){
+                const decoded = jwt.verify(token, process.env.SECRET)
+                req.user = await User.findById(decoded.userId).select('-password')
+                // req.user = decoded;
+                // console.log(decoded)
+                // console.log(req.user)
+                res.status(200)
+                next()
+            }
         } catch (error) {
             console.log(error)
-            res.status(401);
-            throw new Error('No authorization, token failed')
+            return res.status(401).json({message:error.message || "You're not logged in..."});
         }
-
-    } else {
-        res.status(401);
-        throw new Error('No authorization allowed')
-    }
 })
 
 // export const postOwner = async(req,res) => {
