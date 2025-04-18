@@ -36,12 +36,6 @@ export const protect = asyncHandler(async(req,res,next) => {
         }
 })
 
-// export const postOwner = async(req,res) => {
-//     const {id} = req.params
-//     const post = await Post.findById(id)
-//     console.log(req.user_id, post.author)
-// }
-
 export const Admin_Or_Owner_Post = asyncHandler(async(req,res,next) => {
     const {id} = req.params;
     const post = await Post.findById(id)
