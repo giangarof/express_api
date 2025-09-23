@@ -36,16 +36,25 @@ export class PostController{
     
     // get all posts
     async findAll(req,res) {
-        const posts = await Post.find({})
-        res.status(200).json({posts})
+        try {
+            const posts = await Post.find({})
+            
+            return res.status(200).json({posts})
+        } catch (error) {
+            return res.status(400).send(error)
+        }
     }
     
     // get one post
     async findPost(req,res) {
-        const {id} = req.params;
-        const post = await Post.findById(id).populate('reviews')
-        res.status(200).json({message:'Found', post})
-        // console.log(post)
+        try {
+            const {id} = req.params;
+            const post = await Post.findById(id).populate('reviews')
+            return res.status(200).json({message:'Found', post})
+            
+        } catch (error) {
+            return res.status(400).send(error)
+        }
     }   
     
     // update post
@@ -86,55 +95,61 @@ export class PostController{
             
             
         } catch (error) {
-            throw new Error(error)
+            // throw new Error(error)
+            return res.status(400).send(error)
         }
     
     }
     
     // delete post
     async deletePost(req,res) {
-        const {id} = req.params;
+        try {
+            const {id} = req.params;
+            
+            // id from the POST MODEL DATABASE | Look up the post
+            const post = await Post.findById(id);
+            // const postOwner = await User.findById(userPostId)
+            const user = req.user;
         
-        // id from the POST MODEL DATABASE | Look up the post
-        const post = await Post.findById(id);
-        // const postOwner = await User.findById(userPostId)
-        const user = req.user;
-    
-        // If the post dont exist
-        if(!post){
-            res.status(404).json({message:`Post dont exist.`})
-        }
+            // If the post dont exist
+            if(!post){
+                res.status(404).json({message:`Post dont exist.`})
+            }
+            
+            const postOwner = post.author[0]._id.equals(user._id)
+            const userIsAdmin = user.isAdmin
         
-        const postOwner = post.author[0]._id.equals(user._id)
-        const userIsAdmin = user.isAdmin
-    
-        const deletion = async () => {
-            // find the user
-            const user = await User.findById(post.author[0]._id)
-            // find the post
-            // const postToDelete = postId._id
-    
-            // the filter method create a new array with a specific value
-            // here, i'm excluding the id
-            user.posts =  user.posts.filter(i => i != id)
-            // save it with the new array
-            await Post.findByIdAndDelete(id)
-            await user.save()
-        }
-    
-        if(userIsAdmin){
-            deletion()
-            res.status(401).json({message:`Deleted as admin.`})
-        } else if(!postOwner){
-            res.status(401).json({message:`You're not the owner of the post.`})
-        } else {
-            deletion()
-            res.status(200).json({message:'Post deleted successfully!'})
+            const deletion = async () => {
+                // find the user
+                const user = await User.findById(post.author[0]._id)
+                // find the post
+                // const postToDelete = postId._id
         
+                // the filter method create a new array with a specific value
+                // here, i'm excluding the id
+                user.posts =  user.posts.filter(i => i != id)
+                // save it with the new array
+                await Post.findByIdAndDelete(id)
+                await user.save()
+            }
+        
+            if(userIsAdmin){
+                deletion()
+                res.status(401).json({message:`Deleted as admin.`})
+            } else if(!postOwner){
+                res.status(401).json({message:`You're not the owner of the post.`})
+            } else {
+                deletion()
+                res.status(200).json({message:'Post deleted successfully!'})
+            
+            }
+            // Two ways to compare the id's
+            // console.log(JSON.stringify(req.user._id) === JSON.stringify(userPostId))
+            // console.log(!req.user._id.equals(userPostId));
+            
+        } catch (error) {
+            return res.status(400).send(error)
         }
-        // Two ways to compare the id's
-        // console.log(JSON.stringify(req.user._id) === JSON.stringify(userPostId))
-        // console.log(!req.user._id.equals(userPostId));
     
     }
     
@@ -158,7 +173,7 @@ export class PostController{
             res.status(200).json({message: like ? 'Unlike' : 'liked', post})
             
         } catch (error) {
-            throw new Error(error)
+            return res.status(400).send(error)
         }
         
     }

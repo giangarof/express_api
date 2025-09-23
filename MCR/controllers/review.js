@@ -6,34 +6,40 @@ import User from "../model/user.js"
 export class ReviewController {
 
     async create(req,res) {
-        // find the post
-        const {id} = req.params;
-        const post = await Post.findById(id)
-    
-        // get the content from the body.
-        const content = req.body;
-        const review = new Review(content)
-    
-        // get the author
-            const author = req.user
-            const user = await User.findById(author._id)
-            review.author = {_id: author._id, name: author.name};
-        // post.reviews = {_id: author._id, name: author.name};
-        // review.author = user
-    
-        // review
-        // post.reviews.push({ 
-        //     _id: author._id,
-        //     name: author.name,
-        // })
-        // post.reviews.push({_id:content._id, name: author.name})
-        post.reviews.push(review)
-        await post.save()
-        await review.save()
-    
-        // console.log(review)
-    
-        return res.status(200).send({message:'Review created', review})
+        
+        try {
+            // find the post
+            const {id} = req.params;
+            const post = await Post.findById(id)
+        
+            // get the content from the body.
+            const content = req.body;
+            const review = new Review(content)
+        
+            // get the author
+                const author = req.user
+                const user = await User.findById(author._id)
+                review.author = {_id: author._id, name: author.name};
+            // post.reviews = {_id: author._id, name: author.name};
+            // review.author = user
+        
+            // review
+            // post.reviews.push({ 
+            //     _id: author._id,
+            //     name: author.name,
+            // })
+            // post.reviews.push({_id:content._id, name: author.name})
+            post.reviews.push(review)
+            await post.save()
+            await review.save()
+        
+            // console.log(review)
+        
+            return res.status(200).send({message:'Review created', review})
+            
+        } catch (error) {
+            return res.status(400).send(error)
+        }
         
     }
     
@@ -52,7 +58,7 @@ export class ReviewController {
             }
             
         } catch (error) {
-            throw new Error(error)
+            return res.status(400).send(error)
         }
     }
     
@@ -69,7 +75,7 @@ export class ReviewController {
             }
             
         } catch (error) {
-            throw new Error(error)
+            return res.status(400).send(error)
         }
     }
     
@@ -91,7 +97,7 @@ export class ReviewController {
             res.status(200).json({message: like ? 'Unlike' : 'liked', review})
             
         } catch (error) {
-            throw new Error(error)
+            return res.status(400).send(error)
         }
        
     }
