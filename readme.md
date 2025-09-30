@@ -16,7 +16,7 @@
 
 ## About Cloudinary
 ``` 
-API_SECRET=<Your data>
+API_KEY=<Your data>
 API_SECRET=<Your data>
 CLOUD_NAME=<Your data>
 ```
