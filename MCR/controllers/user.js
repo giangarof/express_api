@@ -7,7 +7,8 @@ export class UserController{
         try {
             const {email, password} = req.body;
             const user = await User.findOne({email})
-            // console.log(user)
+            
+            
             if(user && (await user.matchPassword(password))){
                 generateToken(res, user._id)
                 res.status(200).send({message:'sign in', profile: user})
@@ -16,7 +17,7 @@ export class UserController{
             }
             
         } catch (error) {
-            throw new Error(error)
+            res.status(404).send(error)
         }
     }
 
